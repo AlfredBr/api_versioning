@@ -12,7 +12,7 @@ api_versioning/
 ├── README.md                 # This file
 ```
 
-### 💡 Works with this configuration ('cause the dropdown did not work in later versions of Swashbuckle)
+### 💡 Works with this configuration ('cause the dropdown didn't work in later versions of Swashbuckle)
 ```xml
 <ItemGroup>
     <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
