@@ -1,8 +1,6 @@
-# API Versioning Demo
-
-An ASP.NET Core minimal API demonstration showcasing **API versioning**, and **Swagger integration**.
-
 ![API Versioning Demo](screenshot.png)
+
+An **ASP.NET Core** minimal API demonstration showcasing **API versioning**, and **Swagger integration**.
 
 ## 📁 Project Structure
 
