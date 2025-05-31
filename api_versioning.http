@@ -1,0 +1,251 @@
+@host = http://localhost:5106
+
+###
+# ============================================================================
+# API Versioning Demo - Comprehensive Test Suite
+# ============================================================================
+# This file contains tests for all API endpoints (v1, v2, and legacy)
+# Run the application first: dotnet run
+# Then execute these requests to test all functionality
+# ============================================================================
+
+###
+# ============================================================================
+# V1 API TESTS - Original 5-day weather forecast
+# ============================================================================
+
+### V1 - Basic weather forecast (always returns 5 days)
+GET {{host}}/api/v1/weatherforecast
+Accept: application/json
+Content-Type: application/json
+
+###
+# ============================================================================
+# V2 API TESTS - Enhanced weather forecast with configurable days
+# ============================================================================
+
+### V2 - Default forecast (5 days when no parameter specified)
+GET {{host}}/api/v2/weatherforecast
+Accept: application/json
+Content-Type: application/json
+
+### V2 - Minimum days (1 day)
+GET {{host}}/api/v2/weatherforecast?days=1
+Accept: application/json
+Content-Type: application/json
+
+### V2 - Small forecast (3 days)
+GET {{host}}/api/v2/weatherforecast?days=3
+Accept: application/json
+Content-Type: application/json
+
+### V2 - Standard forecast (7 days)
+GET {{host}}/api/v2/weatherforecast?days=7
+Accept: application/json
+Content-Type: application/json
+
+### V2 - Maximum days (14 days)
+GET {{host}}/api/v2/weatherforecast?days=14
+Accept: application/json
+Content-Type: application/json
+
+###
+# ============================================================================
+# V2 API EDGE CASE TESTS - Testing validation logic
+# ============================================================================
+
+### V2 - Below minimum (should clamp to 1 day)
+GET {{host}}/api/v2/weatherforecast?days=0
+Accept: application/json
+Content-Type: application/json
+
+### V2 - Negative value (should clamp to 1 day)
+GET {{host}}/api/v2/weatherforecast?days=-5
+Accept: application/json
+Content-Type: application/json
+
+### V2 - Above maximum (should clamp to 14 days)
+GET {{host}}/api/v2/weatherforecast?days=20
+Accept: application/json
+Content-Type: application/json
+
+### V2 - Large number (should clamp to 14 days)
+GET {{host}}/api/v2/weatherforecast?days=100
+Accept: application/json
+Content-Type: application/json
+
+###
+# ============================================================================
+# LEGACY API TESTS - Backward compatibility
+# ============================================================================
+
+### Legacy - Original endpoint (should work like v1)
+GET {{host}}/weatherforecast
+Accept: application/json
+Content-Type: application/json
+
+### Legacy - With trailing slash (should also work)
+GET {{host}}/weatherforecast/
+Accept: application/json
+Content-Type: application/json
+
+###
+# ============================================================================
+# COMPARISON TESTS - Side by side testing
+# ============================================================================
+
+### Comparison - V1 vs Legacy (should return identical structure)
+# V1 Response:
+GET {{host}}/api/v1/weatherforecast
+Accept: application/json
+
+###
+# Legacy Response (should match V1):
+GET {{host}}/weatherforecast
+Accept: application/json
+
+###
+# ============================================================================
+# DATA STRUCTURE VALIDATION TESTS
+# ============================================================================
+
+### V1 Data Structure Test - Verify WeatherForecast fields
+# Expected fields: Date, TemperatureC, Summary, TemperatureF
+# Should always return exactly 5 items
+GET {{host}}/api/v1/weatherforecast
+Accept: application/json
+
+### V2 Data Structure Test - Verify WeatherForecastV2 fields
+# Expected fields: Date, TemperatureC, Summary, TemperatureF, Humidity, WindSpeed
+# Number of items should match days parameter
+GET {{host}}/api/v2/weatherforecast?days=3
+Accept: application/json
+
+###
+# ============================================================================
+# PERFORMANCE TESTS - Multiple rapid requests
+# ============================================================================
+
+### Performance Test - Rapid V1 requests
+GET {{host}}/api/v1/weatherforecast
+Accept: application/json
+
+###
+GET {{host}}/api/v1/weatherforecast
+Accept: application/json
+
+###
+GET {{host}}/api/v1/weatherforecast
+Accept: application/json
+
+### Performance Test - Rapid V2 requests with different parameters
+GET {{host}}/api/v2/weatherforecast?days=1
+Accept: application/json
+
+###
+GET {{host}}/api/v2/weatherforecast?days=7
+Accept: application/json
+
+###
+GET {{host}}/api/v2/weatherforecast?days=14
+Accept: application/json
+
+###
+# ============================================================================
+# ERROR HANDLING TESTS
+# ============================================================================
+
+### Invalid endpoint test (should return 404)
+GET {{host}}/api/v3/weatherforecast
+Accept: application/json
+
+### Invalid path test (should return 404)
+GET {{host}}/api/v1/weather
+Accept: application/json
+
+### Malformed parameter test (non-numeric days)
+# Note: ASP.NET Core will handle this gracefully, defaulting to 0 which clamps to 1
+GET {{host}}/api/v2/weatherforecast?days=abc
+Accept: application/json
+
+###
+# ============================================================================
+# SWAGGER/OPENAPI TESTS
+# ============================================================================
+
+### Swagger JSON for V1
+GET {{host}}/swagger/v1/swagger.json
+Accept: application/json
+
+### Swagger JSON for V2
+GET {{host}}/swagger/v2/swagger.json
+Accept: application/json
+
+### Swagger UI Homepage
+GET {{host}}/swagger
+Accept: text/html
+
+###
+# ============================================================================
+# CONTENT NEGOTIATION TESTS
+# ============================================================================
+
+### V1 - Request without Accept header
+GET {{host}}/api/v1/weatherforecast
+
+### V2 - Request with XML Accept header (should still return JSON)
+GET {{host}}/api/v2/weatherforecast?days=5
+Accept: application/xml
+
+### V1 - Request with wildcard Accept header
+GET {{host}}/api/v1/weatherforecast
+Accept: */*
+
+###
+# ============================================================================
+# LOGGING VERIFICATION TESTS
+# ============================================================================
+# These tests help verify that logging is working correctly
+# Check the console output for timestamps and log messages
+###
+
+### Logging Test - V1 endpoint
+GET {{host}}/api/v1/weatherforecast
+Accept: application/json
+
+### Logging Test - V2 endpoint with parameter
+GET {{host}}/api/v2/weatherforecast?days=10
+Accept: application/json
+
+### Logging Test - Legacy endpoint
+GET {{host}}/weatherforecast
+Accept: application/json
+
+###
+# ============================================================================
+# EXPECTED RESULTS SUMMARY
+# ============================================================================
+# V1 API (/api/v1/weatherforecast):
+#   - Always returns exactly 5 weather forecast items
+#   - Fields: Date, TemperatureC, Summary, TemperatureF
+#   - TemperatureC: -20 to 54 range
+#   - TemperatureF: calculated from TemperatureC
+#   - Summary: One of 10 predefined weather conditions
+#
+# V2 API (/api/v2/weatherforecast?days=X):
+#   - Returns 1-14 weather forecast items based on days parameter
+#   - Fields: Date, TemperatureC, Summary, TemperatureF, Humidity, WindSpeed
+#   - Additional fields: Humidity (0-100%), WindSpeed (0-49 km/h)
+#   - Days parameter validation: clamps to 1-14 range
+#   - Default days: 5 if not specified
+#
+# Legacy API (/weatherforecast):
+#   - Identical to V1 API for backward compatibility
+#   - Always returns exactly 5 weather forecast items
+#   - Same data structure as V1
+#
+# Logging:
+#   - All endpoints log requests with timestamps
+#   - Format: "HH:mm:ss" single-line console output
+#   - Includes request details and parameters
+# ============================================================================
