@@ -155,7 +155,7 @@ app.MapGet(
     )
     .Produces<WeatherForecastV2[]>(StatusCodes.Status200OK);
 
-// Backward compatibility - redirect old endpoint to v1
+// Backward compatibility - TODO: redirect old endpoint to v1
 
 app.MapGet(
         "/weatherforecast",
