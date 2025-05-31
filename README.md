@@ -25,9 +25,15 @@ api_versioning/
 ```
 
 
-## 📄 License
+## ⚖️ License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📚 Libraries
+
+- [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) - Swagger/OpenAPI documentation for ASP.NET Core
+- [Asp.Versioning](https://github.com/dotnet/aspnet-api-versioning) - API versioning for ASP.NET Core
+
 
 ---
 
